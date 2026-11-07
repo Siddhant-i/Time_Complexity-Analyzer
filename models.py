@@ -1,5 +1,6 @@
 
 from database.connection import get_connection
+from models import create_tables
 def create_tables():
 
     query = """
