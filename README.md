@@ -10,7 +10,7 @@ The project consists of two main modules: Algorithm Analyzer and Code Analyzer. 
 
 ### Algorithm Analyzer
 - Supports different categories of algorithms.
-- Includes Sorting, Searching, Array, Mathematical, and String Matching algorithms.
+- Includes Sorting, Searching algorithms.
 - Allows users to select multiple algorithms for comparison.
 - Measures execution time for different input sizes.
 - Supports random, sorted, and reverse-sorted inputs.
@@ -20,7 +20,6 @@ The project consists of two main modules: Algorithm Analyzer and Code Analyzer. 
 ### Code Analyzer
 - Allows users to enter Python code for analysis.
 - Detects loops and nested loops.
-- Identifies recursive function calls.
 - Detects sorting operations.
 - Estimates the time complexity of the given code.
 - Displays analysis results with explanations.
@@ -52,8 +51,7 @@ The project consists of two main modules: Algorithm Analyzer and Code Analyzer. 
 - NumPy
 - Pandas
 - Matplotlib
-- Plotly (if implemented)
-
+  
 ## Project Structure
 
 ```text
@@ -64,12 +62,8 @@ Time-Complexity-Analyzer/
 ├── README.md
 │
 ├── algorithms/
-│   ├── array.py
-│   ├── mathematical.py
+    |-- sorting.py
 │   ├── searching.py
-│   ├── sorting.py
-│   └── string_matching.py
-│
 ├── engine/
 │   ├── analyzer.py
 │   └── benchmark.py
