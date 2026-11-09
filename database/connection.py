@@ -1,9 +1,9 @@
 
-
 import os
 from pathlib import Path
 
 import psycopg
+import streamlit as st
 from dotenv import load_dotenv
 from psycopg.rows import dict_row
 
@@ -11,19 +11,55 @@ Base_direct = Path(__file__).resolve().parent.parent
 load_dotenv(Base_direct / ".env")
 
 
+def get_setting(key):
+    """Read settings from Streamlit Secrets or local .env"""
+
+    try:
+        value = st.secrets.get(key)
+        if value:
+            return value
+    except Exception:
+        pass
+
+    return os.getenv(key)
+
+
 def get_connection():
     """Connect to PostgreSQL and return the connection"""
 
-    required_settings = [ "DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD"]
+    required_settings = [
+        "DB_HOST",
+        "DB_PORT",
+        "DB_NAME",
+        "DB_USER",
+        "DB_PASSWORD"
+    ]
 
-    missing = [i for i in required_settings if not os.getenv(i)]
+    settings = {
+        key: get_setting(key)
+        for key in required_settings
+    }
+
+    missing = [
+        key for key, value in settings.items()
+        if not value
+    ]
 
     if missing:
-        raise RuntimeError(f"Missing database settings: {', '.join(missing)} \n Check your project's .env file.")
+        raise RuntimeError(
+            f"Missing database settings: {', '.join(missing)}"
+        )
 
-    connection = psycopg.connect(host = os.getenv("DB_HOST") , port = int(os.getenv("DB_PORT")),
-        dbname = os.getenv("DB_NAME"), user = os.getenv("DB_USER"), password = os.getenv("DB_PASSWORD"), row_factory = dict_row)
-    
+    connection = psycopg.connect(
+        host=settings["DB_HOST"],
+        port=int(settings["DB_PORT"]),
+        dbname=settings["DB_NAME"],
+        user=settings["DB_USER"],
+        password=settings["DB_PASSWORD"],
+        row_factory=dict_row,
+        sslmode="require"
+    )
+
     return connection
 
 
@@ -33,6 +69,7 @@ if __name__ == "__main__":
             with connection.cursor() as cursor:
                 cursor.execute("SELECT version();")
                 result = cursor.fetchone()
+
                 print("PostgreSQL connection successful!")
                 print(result["version"])
 
